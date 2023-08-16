@@ -18,6 +18,7 @@ var timestep = 0.01; // seconds
 var supplyStatus = true;
 var emptyQuantity = 0.8;
 var directionInAccount = false;
+const gravity = 2;
 
 var fluidflowdirections = {up:1,left:1,down:1,right:1};//{up:0.1,left:0.5,down:1,right:0.5};
 
@@ -30,7 +31,7 @@ function setup() {
 	canvas = createCanvas(W, H);
 	background(20);
 	buildGridSkeleton();
-	
+
 }
 
 function buildGridSkeleton(){
@@ -182,7 +183,7 @@ function computeWaterIteration(){
 		difffluid.push([]);
 		for (var x=0; x<gridw; x+=1){
 			difffluid[y].push(0)
-		}				
+		}
 	}
 	for (var i=0; i<emptycells.length; i+=1){
 		var x = emptycells[i].x;
@@ -220,14 +221,14 @@ function computeWaterIteration(){
 			}
 			if (y>0 && gridStatus[y-1][x]!=0/*  && fluidStatus[y-1][x]<1 */){
 				flow = (1-fluidStatus[y-1][x])*fluidflowdirections.up*emptyQuantity*fluidStatus[y][x]/directions;
-				difffluid[y-1][x] += flow;
-				difffluid[y][x] -= flow;
+				difffluid[y-1][x] += flow/gravity;
+				difffluid[y][x] -= flow/gravity;
 // 				if (fluidStatus2[y-1][x]>1){fluidStatus2[y][x] += fluidStatus2[y-1][x]-1;fluidStatus2[y-1][x]=1;}
 			}
 			if (y<gridh-1 && gridStatus[y+1][x]!=0 /* && fluidStatus[y+1][x]<1 */){
 				flow = (1-fluidStatus[y+1][x])*fluidflowdirections.down*emptyQuantity*fluidStatus[y][x]/directions;
-				difffluid[y+1][x] += flow;
-				difffluid[y][x] -= flow;
+				difffluid[y+1][x] += flow*gravity;
+				difffluid[y][x] -= flow*gravity;
 // 				print(1-gridStatus[y+1][x], flow)
 // 				if (fluidStatus2[y+1][x]>1){fluidStatus2[y][x] += fluidStatus2[y+1][x]-1;fluidStatus2[y+1][x]=1;}
 			}
